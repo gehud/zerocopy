@@ -577,7 +577,7 @@ macro_rules! try_transmute_ref {
 /// ```ignore
 /// fn try_transmute_mut<Src, Dst>(src: &mut Src) -> Result<&mut Dst, ValidityError<&mut Src, Dst>>
 /// where
-///     Src: IntoBytes,
+///     Src: FromByte + IntoBytes,
 ///     Dst: TryFromBytes,
 ///     size_of::<Src>() == size_of::<Dst>(),
 ///     align_of::<Src>() >= align_of::<Dst>(),
@@ -890,11 +890,6 @@ mod tests {
         // Test that memory is transmuted with `try_transmute_mut` as expected.
         let array_of_bools = &mut [false, true, false, true, false, true, false, true];
         let array_of_arrays = &mut [[0u8, 1], [0, 1], [0, 1], [0, 1]];
-        let x: Result<&mut [[u8; 2]; 4], _> = try_transmute_mut!(array_of_bools);
-        assert_eq!(x, Ok(array_of_arrays));
-
-        let array_of_bools = &mut [false, true, false, true, false, true, false, true];
-        let array_of_arrays = &mut [[0u8, 1], [0, 1], [0, 1], [0, 1]];
         let x: Result<&mut [bool; 8], _> = try_transmute_mut!(array_of_arrays);
         assert_eq!(x, Ok(array_of_bools));
 
@@ -903,8 +898,8 @@ mod tests {
         let array_of_bools = &mut [false, true, false, true, false, true, false, true];
         let array_of_arrays = &mut [[0u8, 1], [0, 1], [0, 1], [0, 1]];
         {
-            let x: Result<&mut [[u8; 2]; 4], _> = try_transmute_mut!(array_of_bools);
-            assert_eq!(x, Ok(array_of_arrays));
+            let x: Result<&mut [bool; 8], _> = try_transmute_mut!(array_of_arrays);
+            assert_eq!(x, Ok(array_of_bools));
         }
 
         // Test that `try_transmute_mut!` supports decreasing alignment.

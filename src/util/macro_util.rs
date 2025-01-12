@@ -29,7 +29,7 @@ use crate::{
         invariant::{self, AtLeast, Invariants},
         AliasingSafe, AliasingSafeReason, BecauseExclusive, BecauseImmutable,
     },
-    Immutable, IntoBytes, Ptr, TryFromBytes, Unalign, ValidityError,
+    FromBytes, Immutable, IntoBytes, Ptr, TryFromBytes, Unalign, ValidityError,
 };
 
 /// Projects the type of the field at `Index` in `Self`.
@@ -675,7 +675,7 @@ where
 #[inline(always)]
 pub fn try_transmute_mut<Src, Dst>(src: &mut Src) -> Result<&mut Dst, ValidityError<&mut Src, Dst>>
 where
-    Src: IntoBytes,
+    Src: FromBytes + IntoBytes,
     Dst: TryFromBytes,
 {
     match try_cast_or_pme::<Src, Dst, _, BecauseExclusive>(Ptr::from_mut(src)) {
