@@ -38,6 +38,9 @@ pinned-nightly = "nightly-2024-06-19"
 [package.metadata.playground]
 features = ["__internal_use_only_features_that_work_on_stable"]
 
+[lib]
+crate-type = ["rlib", "dylib"]
+
 [features]
 default = ["byteorder"]
 

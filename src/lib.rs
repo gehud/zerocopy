@@ -237,7 +237,6 @@
     clippy::arithmetic_side_effects,
     clippy::indexing_slicing,
 ))]
-#![cfg_attr(not(test), no_std)]
 #![cfg_attr(
     all(feature = "simd-nightly", any(target_arch = "x86", target_arch = "x86_64")),
     feature(stdarch_x86_avx512)
